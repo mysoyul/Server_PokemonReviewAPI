@@ -6,6 +6,7 @@ import com.pokemonreview.api.exceptions.ResourceNotFoundException;
 import com.pokemonreview.api.models.Pokemon;
 import com.pokemonreview.api.repository.PokemonRepository;
 import com.pokemonreview.api.service.PokemonService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,12 +19,14 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class PokemonServiceImpl implements PokemonService {
-    private PokemonRepository pokemonRepository;
+    private final PokemonRepository pokemonRepository;
 
-    public PokemonServiceImpl(PokemonRepository pokemonRepository) {
-        this.pokemonRepository = pokemonRepository;
-    }
+    //Constructor Injection ( 생성자 주입 )
+//    public PokemonServiceImpl(PokemonRepository pokemonRepository) {
+//        this.pokemonRepository = pokemonRepository;
+//    }
 
     @Override
     public PokemonDto createPokemon(PokemonDto pokemonDto) {
@@ -31,23 +34,23 @@ public class PokemonServiceImpl implements PokemonService {
 
         Pokemon newPokemon = pokemonRepository.save(pokemon);
 
-        PokemonDto pokemonResponse = new PokemonDto();
-        pokemonResponse.setId(newPokemon.getId());
-        pokemonResponse.setName(newPokemon.getName());
-        pokemonResponse.setType(newPokemon.getType());
-        return pokemonResponse;
+//        PokemonDto pokemonResponse = new PokemonDto();
+//        pokemonResponse.setId(newPokemon.getId());
+//        pokemonResponse.setName(newPokemon.getName());
+//        pokemonResponse.setType(newPokemon.getType());
+        return mapToDto(newPokemon);
     }
 
     @Override
     public PageResponse<?> getAllPokemon(int pageNo, int pageSize) {
-        Pageable pageable =
-                PageRequest.of(pageNo, pageSize, Sort.by("id").descending());
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by("id").descending());
 
         Page<Pokemon> pokemonPage = pokemonRepository.findAll(pageable);
         List<Pokemon> listOfPokemon = pokemonPage.getContent();
         List<PokemonDto> content = listOfPokemon
                 .stream() //Stream<Pokemon>
-                .map(p -> mapToDto(p)) //Stream<PokemonDto>
+                //entity -> dto
+                .map(entity -> mapToDto(entity)) //Stream<PokemonDto>
                 //.map(this::mapToDto)
                 .collect(Collectors.toList()); //List<PokemonDto>
 
@@ -69,17 +72,17 @@ public class PokemonServiceImpl implements PokemonService {
     }
 
     private Pokemon getExistPokemon(int id) {
-        Pokemon pokemon = pokemonRepository
-                .findById(id)
+        return pokemonRepository
+                .findById(id) //Option<Pokemon>
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Pokemon could not be found"));
-        return pokemon;
     }
 
     @Override
     public PokemonDto updatePokemon(PokemonDto pokemonDto, int id) {
         Pokemon pokemon = getExistPokemon(id);
 
+        //Entity의 setter method 호출을 해도 update query가 실행 됩니다. ( Dirty Checking )
         pokemon.setName(pokemonDto.getName());
         pokemon.setType(pokemonDto.getType());
 
@@ -93,6 +96,7 @@ public class PokemonServiceImpl implements PokemonService {
         pokemonRepository.delete(pokemon);
     }
 
+    //Entity -> Dto
     private PokemonDto mapToDto(Pokemon pokemon) {
         PokemonDto pokemonDto = new PokemonDto();
         pokemonDto.setId(pokemon.getId());
@@ -101,6 +105,7 @@ public class PokemonServiceImpl implements PokemonService {
         return pokemonDto;
     }
 
+    //Dto -> Entity
     private Pokemon mapToEntity(PokemonDto pokemonDto) {
         Pokemon pokemon = new Pokemon();
         pokemon.setName(pokemonDto.getName());
