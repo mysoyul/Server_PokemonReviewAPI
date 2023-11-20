@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorObject> handleException(Exception e) {
         ErrorObject errorObject = new ErrorObject();
-        errorObject.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        errorObject.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());  //500
         errorObject.setMessage(e.getMessage());
 
         log.error(e.getMessage(), e);
