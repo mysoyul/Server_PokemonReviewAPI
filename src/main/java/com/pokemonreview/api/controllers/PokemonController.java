@@ -21,6 +21,7 @@ public class PokemonController {
         this.pokemonService = pokemonService;
     }
 
+    //http://localhost:8080/api/pokemon?pageNo=1&pageSize=5
     @GetMapping
     public ResponseEntity<PageResponse<?>> getPokemons(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
@@ -34,7 +35,7 @@ public class PokemonController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.CREATED)  //201
     public ResponseEntity<PokemonDto> createPokemon(@RequestBody PokemonDto pokemonDto) {
         return new ResponseEntity<>(pokemonService.createPokemon(pokemonDto), HttpStatus.CREATED);
     }
@@ -49,10 +50,10 @@ public class PokemonController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePokemon(@PathVariable("id") int pokemonId) {
         pokemonService.deletePokemonId(pokemonId);
-        return new ResponseEntity<>("Pokemon delete", HttpStatus.OK);
+        return new ResponseEntity<>("Id : " + pokemonId + " Pokemon deleted!!", HttpStatus.OK);
     }
 
-		@GetMapping("/pokemontypes")
+    @GetMapping("/pokemontypes")
     public ResponseEntity<List<String>> getPokemonTypes() {
         return new ResponseEntity<>(PokemonType.nameList(), HttpStatus.OK);
     }
