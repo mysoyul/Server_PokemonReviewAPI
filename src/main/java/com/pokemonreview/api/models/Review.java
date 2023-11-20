@@ -17,8 +17,11 @@ public class Review {
     @Column(name = "review_id")
     private int id;
 
+    @Column(nullable = false)
     private String title;
+
     private String content;
+
     private int stars;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -13,6 +13,6 @@ public enum PokemonType {
     public static List<String> nameList() {
         return Arrays.stream(PokemonType.values())
                 .map(value -> value.name())
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());  //List<String>
     }
 }

@@ -21,6 +21,7 @@ public class Pokemon {
     @Column(name = "pokemon_id")
     private int id;
 
+    @Column(nullable = false)
     private String name;
 
     @Enumerated(EnumType.STRING)
