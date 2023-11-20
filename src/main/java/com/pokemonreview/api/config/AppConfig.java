@@ -7,6 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+//import org.modelmapper.ModelMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,7 +21,7 @@ public class AppConfig {
         return args -> {
             System.out.println("**** Pokemon Insert 시작");
             //pokemonRepository.deleteAll();
-            List<Pokemon> pokemonList = IntStream.range(0, 10)
+            List<Pokemon> pokemonList = IntStream.rangeClosed(1, 10)
                     .mapToObj(i -> Pokemon.builder()
                             .name("pikachu" + i)
                             .type(PokemonType.ELECTRIC)
@@ -32,4 +33,12 @@ public class AppConfig {
 
         };
     }
+
+//    @Bean
+//    public ModelMapper modelMapper() {
+//        ModelMapper modelMapper = new ModelMapper();
+//        modelMapper.getConfiguration().setSkipNullEnabled(true);
+//
+//        return modelMapper;
+//    }
 }

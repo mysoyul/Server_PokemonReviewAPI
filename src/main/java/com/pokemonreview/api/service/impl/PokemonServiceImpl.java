@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+//import org.modelmapper.ModelMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,10 +35,6 @@ public class PokemonServiceImpl implements PokemonService {
 
         Pokemon newPokemon = pokemonRepository.save(pokemon);
 
-//        PokemonDto pokemonResponse = new PokemonDto();
-//        pokemonResponse.setId(newPokemon.getId());
-//        pokemonResponse.setName(newPokemon.getName());
-//        pokemonResponse.setType(newPokemon.getType());
         return mapToDto(newPokemon);
     }
 
@@ -83,8 +80,8 @@ public class PokemonServiceImpl implements PokemonService {
         Pokemon pokemon = getExistPokemon(id);
 
         //Entity의 setter method 호출을 해도 update query가 실행 됩니다. ( Dirty Checking )
-        pokemon.setName(pokemonDto.getName());
-        pokemon.setType(pokemonDto.getType());
+        if(pokemonDto.getName() != null) pokemon.setName(pokemonDto.getName());
+        if(pokemonDto.getType() != null) pokemon.setType(pokemonDto.getType());
 
         //Pokemon updatedPokemon = pokemonRepository.save(pokemon);
         return mapToDto(pokemon);
