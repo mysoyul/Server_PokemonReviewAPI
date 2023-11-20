@@ -8,12 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
+@TestPropertySource(locations = "classpath:/application-test.properties")
 public class PokemonRepositoryTests {
 
     @Autowired
@@ -22,7 +26,7 @@ public class PokemonRepositoryTests {
     @Test
     public void PokemonRepository_SaveAll_ReturnSavedPokemon() {
         //Arrange
-        Pokemon pokemon = Pokemon.builder()
+        Pokemon pokemon = Pokemon.builder() //PokemonBuilder
                 .name("Pikachu")
                 .type(PokemonType.ELECTRIC)
                 .build();
@@ -30,9 +34,10 @@ public class PokemonRepositoryTests {
         Pokemon savedPokemon = pokemonRepository.save(pokemon);
 
         //Assert
-        Assertions.assertThat(savedPokemon).isNotNull();
-        Assertions.assertThat(savedPokemon.getId())
+        assertThat(savedPokemon).isNotNull();
+        assertThat(savedPokemon.getId())
                 .isGreaterThan(0);
+
     }
 
     @Test
@@ -49,8 +54,8 @@ public class PokemonRepositoryTests {
 
         List<Pokemon> pokemonList = pokemonRepository.findAll();
 
-        Assertions.assertThat(pokemonList).isNotNull();
-        Assertions.assertThat(pokemonList.size()).isEqualTo(2);
+        assertThat(pokemonList).isNotNull();
+        assertThat(pokemonList.size()).isEqualTo(2);
     }
 
     @Test
@@ -65,8 +70,8 @@ public class PokemonRepositoryTests {
                 .findById(pokemon.getId())
                 .get();
 
-        Assertions.assertThat(savedPokemon).isNotNull();
-				Assertions.assertThat(savedPokemon.getName()).isEqualTo("Pikachu");
+        assertThat(savedPokemon).isNotNull();
+				assertThat(savedPokemon.getName()).isEqualTo("Pikachu");
     }
 
     @Test
@@ -81,8 +86,8 @@ public class PokemonRepositoryTests {
                 .findByType(pokemon.getType())
                 .get();
 
-        Assertions.assertThat(pokemonList).isNotNull();
-				Assertions.assertThat(pokemon.getType().name()).isEqualTo(PokemonType.ELECTRIC.name());
+        assertThat(pokemonList).isNotNull();
+				assertThat(pokemon.getType().name()).isEqualTo(PokemonType.ELECTRIC.name());
     }
 
     @Test
@@ -98,8 +103,8 @@ public class PokemonRepositoryTests {
         pokemonSave.setName("Raichu");
         pokemonSave.setType(PokemonType.NORMAL);
 
-        Assertions.assertThat(pokemonSave.getName()).isEqualTo("Raichu");
-        Assertions.assertThat(pokemonSave.getType()).isEqualTo(PokemonType.NORMAL);
+        assertThat(pokemonSave.getName()).isEqualTo("Raichu");
+        assertThat(pokemonSave.getType()).isEqualTo(PokemonType.NORMAL);
 
         System.out.println("pokemonSave = " + pokemonSave);
     }
@@ -116,6 +121,6 @@ public class PokemonRepositoryTests {
         pokemonRepository.deleteById(pokemon.getId());
         Optional<Pokemon> pokemonReturn = pokemonRepository.findById(pokemon.getId());
 
-        Assertions.assertThat(pokemonReturn).isEmpty();
+        assertThat(pokemonReturn).isEmpty();
     }
 }
