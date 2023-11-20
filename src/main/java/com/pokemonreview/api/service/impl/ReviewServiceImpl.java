@@ -7,6 +7,7 @@ import com.pokemonreview.api.models.Review;
 import com.pokemonreview.api.repository.PokemonRepository;
 import com.pokemonreview.api.repository.ReviewRepository;
 import com.pokemonreview.api.service.ReviewService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,33 +17,32 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
-    private ReviewRepository reviewRepository;
-    private PokemonRepository pokemonRepository;
+    private final ReviewRepository reviewRepository;
+    private final PokemonRepository pokemonRepository;
 
-    @Autowired
-    public ReviewServiceImpl(ReviewRepository reviewRepository, 
-                             PokemonRepository pokemonRepository) {
-        this.reviewRepository = reviewRepository;
-        this.pokemonRepository = pokemonRepository;
-    }
+//    @Autowired
+//    public ReviewServiceImpl(ReviewRepository reviewRepository,
+//                             PokemonRepository pokemonRepository) {
+//        this.reviewRepository = reviewRepository;
+//        this.pokemonRepository = pokemonRepository;
+//    }
 
     private Pokemon getExistPokemon(int pokemonId) {
-        Pokemon pokemon = pokemonRepository
+        return pokemonRepository
                 .findById(pokemonId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "Pokemon with associated review not found"));
-        return pokemon;
     }
 
     private Review getExistReview(int reviewId) {
-        Review review = reviewRepository
+        return reviewRepository
                 .findById(reviewId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "Review with associate pokemon not found"));
-        return review;
     }
 
     @Override
@@ -58,11 +58,12 @@ public class ReviewServiceImpl implements ReviewService {
 
 
     @Override
-    public List<ReviewDto> getReviewsByPokemonId(int id) {
-        List<Review> reviews = reviewRepository.findByPokemonId(id);
+    public List<ReviewDto> getReviewsByPokemonId(int pokemonId) {
+        List<Review> reviews = reviewRepository.findByPokemonId(pokemonId);
 
         return reviews.stream()
-                .map(review -> mapToDto(review))
+                //.map(review -> mapToDto(review))
+                .map(this::mapToDto)
                 .collect(Collectors.toList());
     }
 
@@ -93,13 +94,14 @@ public class ReviewServiceImpl implements ReviewService {
                     "This review does not belong to a pokemon");
         }
 
+        //setter 호출 하면 update query가 실행
         review.setTitle(reviewDto.getTitle());
         review.setContent(reviewDto.getContent());
         review.setStars(reviewDto.getStars());
 
-        Review updateReview = reviewRepository.save(review);
-
-        return mapToDto(updateReview);
+//        Review updateReview = reviewRepository.save(review);
+//        return mapToDto(updateReview);
+        return mapToDto(review);
     }
 
     @Override
