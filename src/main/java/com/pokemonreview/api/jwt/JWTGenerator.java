@@ -23,7 +23,7 @@ public class JWTGenerator {
 		Date expireDate = new Date(currentDate.getTime() +
 				SecurityConstants.JWT_EXPIRATION);
 		
-		String token = Jwts.builder()
+		String token = Jwts.builder() //JwtBuilder
 				.setSubject(username)
 				.setIssuedAt(new Date())
 				.setExpiration(expireDate)
