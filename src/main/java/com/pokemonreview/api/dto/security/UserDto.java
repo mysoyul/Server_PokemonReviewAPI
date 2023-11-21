@@ -15,8 +15,7 @@ public class UserDto {
     private String role;
 
     @Builder
-    public UserDto(int id, String username, String firstName, 
-String lastName, String role) {
+    public UserDto(int id, String username, String firstName, String lastName, String role) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;
