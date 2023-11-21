@@ -5,6 +5,7 @@ import com.pokemonreview.api.models.PokemonType;
 import com.pokemonreview.api.models.Review;
 import com.pokemonreview.api.repository.PokemonRepository;
 import com.pokemonreview.api.repository.ReviewRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -58,11 +59,12 @@ public class AppConfig {
         };
     }
 
-//    @Bean
-//    public ModelMapper modelMapper() {
-//        ModelMapper modelMapper = new ModelMapper();
-//        modelMapper.getConfiguration().setSkipNullEnabled(true);
-//
-//        return modelMapper;
-//    }
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+        //값이 null 이면 매핑 하지 않고 Skip 하는 설정
+        modelMapper.getConfiguration().setSkipNullEnabled(true);
+
+        return modelMapper;
+    }
 }
