@@ -21,14 +21,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-				return http
-								.cors(withDefaults())
-								.csrf(csrf -> csrf.disable())
+        return http
+                .cors(withDefaults())
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/pokemon/**","/api/admin/**").authenticated();
-                 })
-                 .formLogin(withDefaults())  
-                 .build();
+                            .requestMatchers("/api/pokemon/**", "/api/admin/**").authenticated();
+                })
+                .formLogin(withDefaults())
+                .build();
     }
 }
