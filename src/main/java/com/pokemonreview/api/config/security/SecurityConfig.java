@@ -58,7 +58,11 @@ public class SecurityConfig {
                     auth.requestMatchers("/api/auth/**").permitAll()
                             .requestMatchers("/api/pokemon/**", "/api/admin/**").authenticated();
                 })
-                .formLogin(withDefaults())
+                //.formLogin(withDefaults())
+                .exceptionHandling(authManager -> authManager
+                        .authenticationEntryPoint(authenticationEntryPoint())
+                        .accessDeniedHandler(accessDeniedHandler())
+                )
                 .build();
     }
 }
