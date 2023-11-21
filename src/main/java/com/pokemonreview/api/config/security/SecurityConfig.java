@@ -2,6 +2,7 @@ package com.pokemonreview.api.config.security;
 
 import com.pokemonreview.api.exceptions.security.CustomAccessDeniedHandler;
 import com.pokemonreview.api.exceptions.security.JwtAuthEntryPoint;
+import com.pokemonreview.api.jwt.filter.JWTAuthenticationFilter;
 import com.pokemonreview.api.service.security.CustomUserDetailsService;
 
 import org.springframework.context.annotation.Bean;
@@ -11,11 +12,13 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -50,6 +53,11 @@ public class SecurityConfig {
     }
 
     @Bean
+    public JWTAuthenticationFilter jwtAuthenticationFilter() {
+        return new JWTAuthenticationFilter();
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .cors(withDefaults())
@@ -59,6 +67,10 @@ public class SecurityConfig {
                             .requestMatchers("/api/pokemon/**", "/api/admin/**").authenticated();
                 })
                 //.formLogin(withDefaults())
+                //Session 정책을 STATELESS 로 설정
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                //JWTAuthenticationFilter 가 먼저 동작 하도록 설정
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(authManager -> authManager
                         .authenticationEntryPoint(authenticationEntryPoint())
                         .accessDeniedHandler(accessDeniedHandler())
