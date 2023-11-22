@@ -40,7 +40,7 @@ public class PokemonController {
         return new ResponseEntity<>(pokemonService.createPokemon(pokemonDto), HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<PokemonDto> updatePokemon(@RequestBody PokemonDto pokemonDto,
                                                     @PathVariable("id") int pokemonId) {
         PokemonDto response = pokemonService.updatePokemon(pokemonDto, pokemonId);
