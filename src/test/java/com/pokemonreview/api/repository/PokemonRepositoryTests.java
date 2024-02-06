@@ -44,12 +44,14 @@ public class PokemonRepositoryTests {
     public void PokemonRepository_GetAll_ReturnMoreThenOnePokemon() {
         Pokemon pokemon = Pokemon.builder()
                 .name("Pikachu")
-                .type(PokemonType.ELECTRIC).build();
+                .type(PokemonType.ELECTRIC)
+                .build();
         pokemonRepository.save(pokemon);
 
         Pokemon pokemon2 = Pokemon.builder()
                 .name("Raichu")
-                .type(PokemonType.NORMAL).build();
+                .type(PokemonType.NORMAL)
+                .build();
         pokemonRepository.save(pokemon2);
 
         List<Pokemon> pokemonList = pokemonRepository.findAll();
@@ -63,7 +65,8 @@ public class PokemonRepositoryTests {
     public void PokemonRepository_FindById_ReturnPokemon() {
         Pokemon pokemon = Pokemon.builder()
                 .name("Pikachu")
-                .type(PokemonType.ELECTRIC).build();
+                .type(PokemonType.ELECTRIC)
+                .build();
 
         pokemonRepository.save(pokemon);
 
@@ -79,7 +82,8 @@ public class PokemonRepositoryTests {
     public void PokemonRepository_FindByType_ReturnPokemonNotNull() {
         Pokemon pokemon = Pokemon.builder()
                 .name("Pikachu")
-                .type(PokemonType.ELECTRIC).build();
+                .type(PokemonType.ELECTRIC)
+                .build();
 
         pokemonRepository.save(pokemon);
 
@@ -100,7 +104,9 @@ public class PokemonRepositoryTests {
 
         pokemonRepository.save(pokemon);
 
-        Pokemon pokemonSave = pokemonRepository.findById(pokemon.getId()).get();
+        Pokemon pokemonSave = pokemonRepository
+                .findById(pokemon.getId())
+                .get();
         pokemonSave.setName("Raichu");
         pokemonSave.setType(PokemonType.NORMAL);
 

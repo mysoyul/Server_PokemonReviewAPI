@@ -64,7 +64,8 @@ public class ReviewServiceImpl implements ReviewService {
         return reviews.stream()
                 //.map(review -> mapToDto(review))
                 .map(this::mapToDto)
-                .collect(Collectors.toList());
+                .toList();
+                //.collect(Collectors.toList());
     }
 
     @Override
